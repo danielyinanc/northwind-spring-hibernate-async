@@ -1,2 +1,7 @@
-# northwind-spring-hibernate-reactor
-Spring 4 Reactor 2 Hibernate 4 on Northwind
+# northwind-spring-hibernate-async
+
+Building an async spring web rest server for serving northwind database.
+
+NorthWind via Spring 4 Async Hibernate 4
+ 
+MySQL version of the famous training database we are using
