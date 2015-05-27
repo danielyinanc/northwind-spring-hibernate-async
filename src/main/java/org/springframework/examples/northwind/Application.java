@@ -1,44 +1,53 @@
 package org.springframework.examples.northwind;
 
+import org.apache.catalina.core.ApplicationContext;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import reactor.core.Environment;
-import reactor.core.Reactor;
-import reactor.core.spec.Reactors;
-import reactor.spring.context.config.EnableReactor;
+import org.springframework.examples.northwind.service.ProductBo;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
+import org.springframework.web.client.AsyncRestTemplate;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.Properties;
 
-/**
- * Simple Spring Boot app to start a Reactor+Netty-based REST API server for thumbnailing uploaded images.
- */
-@EnableAutoConfiguration
 @Configuration
 @ComponentScan
-@EnableReactor
-@PropertySource("classpath:application.properties")
+@EnableAutoConfiguration
 public class Application {
 
-    @Bean
-    public Reactor reactor(Environment env) {
-        Reactor reactor = Reactors.reactor(env, Environment.THREAD_POOL);
 
-        // Register our thumbnailer on the Reactor
-        //reactor.receive($("thumbnail"), new BufferedImageThumbnailer(250));
-
-        return reactor;
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
-    public CountDownLatch closeLatch() {
-        return new CountDownLatch(1);
+    AsyncRestTemplate asyncRestTemplate() {
+        return new AsyncRestTemplate();
     }
+
+    @Bean
+    public SessionFactory sessionFactory() {
+        LocalSessionFactoryBuilder builder =
+                new LocalSessionFactoryBuilder(dataSource());
+        builder.scanPackages("org.springframework.examples.northwind.model")
+                .addProperties(getHibernateProperties());
+
+        return builder.buildSessionFactory();
+    }
+
+    private Properties getHibernateProperties() {
+        Properties prop = new Properties();
+        prop.put("hibernate.format_sql", "true");
+        prop.put("hibernate.show_sql", "true");
+        prop.put("hibernate.dialect",
+                "org.hibernate.dialect.MySQL5Dialect");
+        return prop;
+    }
+
 
     @Bean(name = "dataSource")
     public BasicDataSource dataSource() {
@@ -50,14 +59,4 @@ public class Application {
         ds.setPassword("my-secret-pw");
         return ds;
     }
-
-    public static void main(String... args) throws InterruptedException {
-        ApplicationContext ctx = SpringApplication.run(Application.class, args);
-
-        // Reactor's TCP servers are non-blocking so we have to do something to keep from exiting the main thread
-        CountDownLatch closeLatch = ctx.getBean(CountDownLatch.class);
-        closeLatch.await();
-    }
-
-
 }
