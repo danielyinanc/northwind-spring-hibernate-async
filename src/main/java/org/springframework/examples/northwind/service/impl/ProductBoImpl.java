@@ -2,9 +2,15 @@ package org.springframework.examples.northwind.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.examples.northwind.dao.ProductDao;
+import org.springframework.examples.northwind.dto.ProductDto;
 import org.springframework.examples.northwind.model.Product;
 import org.springframework.examples.northwind.service.ProductBo;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.Future;
 
 @Service("productBo")
 public class ProductBoImpl implements ProductBo {
@@ -29,8 +35,11 @@ public class ProductBoImpl implements ProductBo {
     }
 
     @Override
-    public Product findByProductId(Integer productId) {
-        return productDao.findByProductId(productId);
+    @Async
+    public ListenableFuture<Product> findByProductId(Integer productId) {
+        return new AsyncResult<>(
+                 productDao.findByProductId(productId)
+        );
     }
 
 

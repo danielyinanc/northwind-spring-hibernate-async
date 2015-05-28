@@ -2,6 +2,8 @@ package org.springframework.examples.northwind.dao;
 
 import org.springframework.examples.northwind.model.Product;
 
+import java.util.concurrent.Future;
+
 public interface ProductDao {
 
     void save(Product stock);

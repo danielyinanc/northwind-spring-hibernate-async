@@ -4,7 +4,6 @@ package org.springframework.examples.northwind.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.examples.northwind.dto.RepoListDto;
 import org.springframework.examples.northwind.model.Product;
 import org.springframework.examples.northwind.service.ProductBo;
 import org.springframework.examples.northwind.service.RepoListService;
@@ -30,19 +29,18 @@ class AsyncController {
     @RequestMapping("/async")
     DeferredResult<ResponseEntity<?>> async(@RequestParam("q") String query) {
         DeferredResult<ResponseEntity<?>> deferredResult = new DeferredResult<>();
-        ListenableFuture<RepoListDto> repositoryListDto = repoListService.search(query);
+        ListenableFuture<Product> repositoryListDto = productBo.findByProductId(1);
         repositoryListDto.addCallback(
-                new ListenableFutureCallback<RepoListDto>() {
+                new ListenableFutureCallback<Product>() {
                     @Override
-                    public void onSuccess(RepoListDto result) {
+                    public void onSuccess(Product result) {
 
-                        /** select **/
-                        Product product = productBo.findByProductId(1);
-                        System.out.println(product);
+                        //Product product = productBo.findByProductId(1);
+                        //System.out.println(product);
 
-                        System.out.println("Done");
+                        System.out.println(result);
 
-                        ResponseEntity<RepoListDto> responseEntity =
+                        ResponseEntity<Product> responseEntity =
                             new ResponseEntity<>(result, HttpStatus.OK);
                         deferredResult.setResult(responseEntity);
                     }
