@@ -1,6 +1,6 @@
 package org.springframework.examples.northwind;
 
-import org.apache.catalina.core.ApplicationContext;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.examples.northwind.service.ProductBo;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -24,6 +23,7 @@ import java.util.concurrent.Executor;
 @ComponentScan
 @EnableAutoConfiguration
 @EnableAsync
+@Log4j2
 public class Application implements AsyncConfigurer {
 
 

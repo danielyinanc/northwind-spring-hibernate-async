@@ -2,13 +2,13 @@ package org.springframework.examples.northwind.dao;
 
 import org.springframework.examples.northwind.model.Product;
 
+import java.util.List;
 import java.util.concurrent.Future;
 
 public interface ProductDao {
-
-    void save(Product stock);
-    void update(Product stock);
-    void delete(Product stock);
+    Boolean save(Product stock);
+    Boolean update(Product stock);
+    Boolean delete(Integer productId);
     Product findByProductId(Integer productId);
-
+    List<Product> findAllProducts();
 }

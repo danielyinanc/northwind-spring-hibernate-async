@@ -3,10 +3,12 @@ package org.springframework.examples.northwind.service;
 import org.springframework.examples.northwind.model.Product;
 import org.springframework.util.concurrent.ListenableFuture;
 
-public interface ProductBo {
+import java.util.List;
 
-    void save(Product stock);
-    void update(Product stock);
-    void delete(Product stock);
+public interface ProductBo {
+    ListenableFuture<Boolean>  save(Product product);
+    ListenableFuture<Boolean>  update(Product product);
+    ListenableFuture<Boolean> delete(Integer productId);
     ListenableFuture<Product> findByProductId(Integer productId);
+    ListenableFuture<List<Product>> findAllProducts();
 }
