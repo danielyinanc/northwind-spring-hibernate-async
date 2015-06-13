@@ -16,6 +16,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.AsyncRestTemplate;
 
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -51,6 +53,7 @@ public class Application implements AsyncConfigurer {
     }
 
     @Bean
+    @PersistenceContext(type= PersistenceContextType.EXTENDED)
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder builder =
                 new LocalSessionFactoryBuilder(dataSource());
